@@ -9,6 +9,7 @@ The Employee Document Management System is a web-based HRIS module that allows o
    - **Marten**: For data persistence in **PostgreSQL**, handling employee and document storage.
    - **Wolverine**: For handling event-driven tasks like sending an invitation email when a new employee is created.
    - **ASP.NET Core Identity**: Manages user roles (Employee, HR, Admin) and ensures proper role-based access control.
+   - **Azure Blob Storage**: Used to store the actual uploaded files securely, while Marten stores file metadata (e.g., file name, size, upload date).
 
 #### **2. Frontend Stack**
    - **React**: For building the user interface, including employee management and document handling.
@@ -39,7 +40,7 @@ The Employee Document Management System is a web-based HRIS module that allows o
    - **Employee and HR**:
      - Employees and HRs can **upload**, **view**, **filter**, and **sort** their documents (e.g., certificates, resumes).
      - Filtering options (e.g., by document type or upload date) are provided.
-   - Documents are stored using **Marten** for metadata (e.g., file name, upload date) and secure file storage.
+   - Documents are stored using **Marten** for metadata (e.g., file name, upload date) and Azure Blob Storage for a file content.
 
 4. **Event-Driven Features with Wolverine**
    - When a new employee is created, Wolverine triggers an event to send an **invitation email** to the employee with login instructions.
