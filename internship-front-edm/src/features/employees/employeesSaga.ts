@@ -2,6 +2,7 @@ import { call, put, all, takeEvery, takeLatest, select } from 'redux-saga/effect
 import { getEmployeesSuccess, createEmployeeSuccess, createEmployeeFailure, deleteEmployeeRequest, createEmployeeRequested, editEmployeeRequest, getEmployeesFetch, setTotalPages, setPageNumber, editEmployeeSuccess, editEmployeeFailure } from './employeesSlice';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
+import { Employee } from './employeesSlice';
 
 interface EmployeeFilters {
     filterRole: string;
@@ -9,6 +10,7 @@ interface EmployeeFilters {
     sortField: string;
     sortOrder: string;
     searchQuery: string;
+    pageSize: number;
     pageNumber: number;
 };
 
@@ -18,14 +20,9 @@ const employeeFIlters = (state: RootState) => ({
     sortField: state.employee.sortField,
     sortOrder: state.employee.sortOrder,
     searchQuery: state.employee.searchQuery,
+    pageSize: state.employee.pageSize,
     pageNumber: state.employee.pageNumber,
 });
-
-interface CreateEmployeePayload {
-    email: string;
-    role: string;
-    department: string;
-}
 
 interface DeleteEmployeePayload{
     email: string;
@@ -36,6 +33,10 @@ interface EditEmployeePayload{
     newEmail: string;
     role: string;
     department: string;
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+    workLocation: string;
 }
 
 
@@ -43,13 +44,14 @@ interface EditEmployeePayload{
 
 
 async function getAllEmployeesApi(filters: EmployeeFilters) {
-    const { filterRole, filterDepartment, sortField, sortOrder, searchQuery, pageNumber } = filters;
+    const { filterRole, filterDepartment, sortField, sortOrder, searchQuery, pageSize, pageNumber } = filters;
     const query = {
         role: filterRole,
         department: filterDepartment,
         sortBy: sortField,
         sortOrder: sortOrder,
         search: searchQuery,
+        pageSize: pageSize,
         pageNumber: pageNumber,
     }
 
@@ -74,6 +76,7 @@ function* getAllEmployeesSaga(): Generator<any, void>{
       const filters:EmployeeFilters = yield select(employeeFIlters);
       const response = yield call(getAllEmployeesApi, filters);
       const {employees, totalPages} = response;
+      console.log(employees);
       yield put(getEmployeesSuccess(employees));
       yield put(setTotalPages(totalPages));
     } catch (error) {
@@ -85,7 +88,7 @@ function* getAllEmployeesSaga(): Generator<any, void>{
 //##################################################################################################//
 
 
-async function createEmployeeIdentityApi(info: CreateEmployeePayload) {
+async function createEmployeeIdentityApi(info: Employee) {
     const data = {email: info.email, role: info.role};
     const response = await fetch('https://localhost:7262/register', {
         method: 'POST',
@@ -100,7 +103,7 @@ async function createEmployeeIdentityApi(info: CreateEmployeePayload) {
     }
 };
 
-async function createEmployeeMartenApi(info: CreateEmployeePayload) {
+async function createEmployeeMartenApi(info: Employee) {
     const response = await fetch('https://localhost:7262/employee/create', {
         method: 'POST',
         headers: {
@@ -114,7 +117,7 @@ async function createEmployeeMartenApi(info: CreateEmployeePayload) {
     }
 };
 
-function* createEmployeeSaga(action: PayloadAction<CreateEmployeePayload>): Generator<any, void> {
+function* createEmployeeSaga(action: PayloadAction<Employee>): Generator<any, void> {
     try {
         yield all([
             call(createEmployeeIdentityApi, action.payload),

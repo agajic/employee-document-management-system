@@ -84,14 +84,6 @@ namespace Internship.EDM.Features.Documents
                     var sadDownloadUri = blobClient.GenerateSasUri(sasBuilder);
                     rdoc.BlobDownloadUri = sadDownloadUri.ToString();
 
-                    //var contentDisposition = $"attachment; filename=\"{rdoc.FileName}\"";  //inline
-
-                    //var sasUriWithContentDisposition = new UriBuilder(sasUri)
-                    //{
-                    //    Query = sasUri.Query + "&rscd=" + Uri.EscapeDataString(contentDisposition)
-                    //}.Uri;
-
-
                     readDocs.Add(rdoc);
                 }
 

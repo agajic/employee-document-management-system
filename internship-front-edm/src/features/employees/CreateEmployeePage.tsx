@@ -23,6 +23,10 @@ const CreateEmployee: React.FC<CreateEmployeePageProps> = ({ onBack }) => {
     email: '',
     role: 'Employee' as 'HR' | 'Employee',
     department: '' as string,
+    firstName: '' as string,
+    lastName: '' as string,
+    phoneNumber: '' as string,
+    workLocation: 'Office-based',
   });
 
 
@@ -54,7 +58,7 @@ const CreateEmployee: React.FC<CreateEmployeePageProps> = ({ onBack }) => {
 
   
 
-  const handleInputChange = (field: keyof typeof newEmployee, value: string) => {
+  const handleInputChange = (field: keyof typeof newEmployee, value: string | null) => {
     setNewEmployee((prev) => {
       if (field === "role" && value ===  "HR") {    // If the role is being updated to "HR", also set the department to "HR"
           return {
@@ -85,12 +89,28 @@ const CreateEmployee: React.FC<CreateEmployeePageProps> = ({ onBack }) => {
       </Typography>
 
       <TextField
-        label="Email"
+        placeholder="Email"
         variant="outlined"
         value={newEmployee.email}
         onChange={(e) => handleInputChange('email', e.target.value)}
         sx={{ marginBottom: 2, width: '100%' }}
       />
+      <Box sx={{ display: 'flex', gap: 2, marginBottom:2 }}>
+      <TextField
+        placeholder="First Name"
+        variant="outlined"
+        value={newEmployee.firstName}
+        onChange={(e) => handleInputChange('firstName', e.target.value)}
+        sx={{ flex: 1 }}
+      />
+      <TextField
+        placeholder="Last Name"
+        variant="outlined"
+        value={newEmployee.lastName}
+        onChange={(e) => handleInputChange('lastName', e.target.value)}
+        sx={{ flex: 1 }}
+      />
+      </Box>
       <FormControl variant="outlined" sx={{ width: '100%', marginBottom: 2 }}>
         <InputLabel>Role</InputLabel>
         <Select
@@ -121,6 +141,28 @@ const CreateEmployee: React.FC<CreateEmployeePageProps> = ({ onBack }) => {
           </Select>
         </FormControl>
       )}
+
+      <TextField
+        placeholder="Phone Number"
+        variant="outlined"
+        value={newEmployee.phoneNumber}
+        onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
+        sx={{ marginBottom: 2, width: '100%' }}
+      />
+
+    <FormControl fullWidth sx={{ marginBottom: 2 }}>
+      <InputLabel>Work Location</InputLabel>
+      <Select
+        value={newEmployee.workLocation}
+        onChange={(e) => handleInputChange('workLocation', e.target.value)}
+        label="Work Location"
+      >
+        <MenuItem value="Office-based">Office-based</MenuItem>
+        <MenuItem value="Remote">Remote</MenuItem>
+        <MenuItem value="Hybrid">Hybrid</MenuItem>
+      </Select>
+    </FormControl>
+
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
         <Button variant="outlined" onClick={onBack}>
             Back

@@ -17,7 +17,7 @@ namespace Internship.EDM.Features.Users
 
                 var decodedToken = HttpUtility.UrlDecode(model.Token);
 
-                var result = await userManager.ResetPasswordAsync(user, decodedToken, model.NewPassword);
+                var result = await userManager.ResetPasswordAsync(user, decodedToken, model.Password);
                 if (result.Succeeded)
                     return Results.Ok("Password has been set successfully. You can now log in using your new password.");
 

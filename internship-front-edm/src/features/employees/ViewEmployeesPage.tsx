@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useEffect } from 'react';
-import { deleteEmployeeRequest, editEmployeeRequest, getEmployeesFetch, setPageNumber } from './employeesSlice';
+import { deleteEmployeeRequest, editEmployeeRequest, getEmployeesFetch, setPageNumber, setPageSize } from './employeesSlice';
 import {
   Table,
   TableBody,
@@ -22,14 +22,19 @@ import {
   TableSortLabel,
   CardContent,
   Card,
+  IconButton,
+  Collapse,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../../app/store';
 import {
+  Employee,
   setFilterRole,
   setFilterDepartment,
   setSort,
@@ -50,6 +55,7 @@ const ViewEmployeesPage: React.FC = () => {
     sortField,
     sortOrder,
     searchQuery,
+    pageSize,
     pageNumber,
     totalPages,
   } = useSelector((state: RootState) => state.employee);
@@ -61,10 +67,9 @@ const ViewEmployeesPage: React.FC = () => {
   const [selectedEmployeeEmail, setSelectedEmployeeEmail] = useState<string | null>(null);
 
 
-
   useEffect(() => {
     dispatch(getEmployeesFetch());
-  }, [dispatch, filterRole, filterDepartment, searchQuery, sortField, sortOrder, pageNumber]);
+  }, [dispatch, filterRole, filterDepartment, searchQuery, sortField, sortOrder, pageSize, pageNumber]);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -139,6 +144,78 @@ const ViewEmployeesPage: React.FC = () => {
 
 
   
+  function Row(props: { row: ReturnType<any> }) {
+    const { row } = props;
+    const [open, setOpen] = React.useState(false);
+  
+    return (
+      <React.Fragment>
+        <TableRow sx={{  '& > *': { borderBottom: 'unset' } }}>
+          <TableCell>
+            <IconButton
+              aria-label="expand row"
+              size="small"
+              onClick={() => setOpen(!open)}
+            >
+              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
+          </TableCell>
+          <TableCell component="th" scope="row">
+            {row.email}
+          </TableCell>
+          <TableCell>{row.role}</TableCell>
+          <TableCell>{row.department}</TableCell>
+          {user?.role !== 'Employee' && (
+                <TableCell>
+                  <Button variant="contained" sx={{ marginRight: 1 }} onClick={() => handleEditClick(row)}>
+                      <EditIcon />
+                  </Button>
+                  <Button variant="contained" color="error"  onClick={() => handleDeleteClick(row.email)}>
+                      <DeleteIcon />
+                  </Button>
+                </TableCell>
+          )}
+
+        </TableRow>
+        <TableRow>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              <Box sx={{ margin: 1 }}>
+                <Typography variant="h6" gutterBottom component="div" sx={{ fontWeight: 'bold' }}>
+                  {row.email}
+                </Typography>
+                <Table size="small" aria-label="purchases" sx={{marginBottom:2}}>
+                  <TableHead>
+                    <TableRow sx={{backgroundColor: '#f0f0f0'}}>
+                      <TableCell sx={{ fontWeight: 'bold' }}>First Name</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold' }}>Last Name</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold' }}>Phone Number</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold' }}>Work Location</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+
+                      <TableRow>
+                        <TableCell component="th" scope="row">
+                          {row.firstName}
+                        </TableCell>
+                        <TableCell>{row.lastName}</TableCell>
+                        <TableCell>{row.phoneNumber}</TableCell>
+                        <TableCell>{row.workLocation}</TableCell>
+                      </TableRow>
+
+                  </TableBody>
+                </Table>
+              </Box>
+            </Collapse>
+          </TableCell>
+        </TableRow>
+      </React.Fragment>
+    );
+  }
+
+
+
   return (
     <Box sx={{ padding: 2 }}>
       <Typography variant="h4" sx={{ marginBottom: 3 }}>
@@ -198,11 +275,17 @@ const ViewEmployeesPage: React.FC = () => {
       </Button>)}
 
       </Box>
+
+
+      {/*#######################################################################################################################*/}
+
+
       <TableContainer component={Paper}>
-        <Table>
+        <Table aria-label="collapsible table">
           <TableHead>
-            <TableRow>
-              <TableCell>
+            <TableRow sx={{ backgroundColor: '#f0f0f0' }}>
+              <TableCell></TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>
                   <TableSortLabel
                     active={sortField === 'email'}
                     direction={sortField === 'email' ? sortOrder : undefined}
@@ -211,7 +294,7 @@ const ViewEmployeesPage: React.FC = () => {
                   Email
                   </TableSortLabel>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>
                   <TableSortLabel
                     active={sortField === 'role'}
                     direction={sortField === 'role' ? sortOrder : undefined}
@@ -220,7 +303,7 @@ const ViewEmployeesPage: React.FC = () => {
                   Role
                   </TableSortLabel>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>
                   <TableSortLabel
                       active={sortField === 'department'}
                       direction={sortField === 'department' ? sortOrder : undefined}
@@ -229,27 +312,33 @@ const ViewEmployeesPage: React.FC = () => {
                   Department
                   </TableSortLabel>
               </TableCell>
-              {user?.role !== 'Employee' && ( <TableCell>Actions</TableCell> )}
+              {user?.role !== 'Employee' && ( <TableCell sx={{ fontWeight: 'bold' }}>Actions</TableCell> )}
             </TableRow>
           </TableHead>
           <TableBody>
             {employees.map((employee) => (
+              <Row key={employee.email} row={employee} />
+            ))}
+            {/*
+            {employees.map((employee) => (
+
               <TableRow key={employee.email}>
                 <TableCell>{employee.email}</TableCell>
                 <TableCell>{employee.role}</TableCell>
                 <TableCell>{employee.department}</TableCell>
                 {user?.role !== 'Employee' && (
                 <TableCell>
-                  <Button variant="outlined" sx={{ marginRight: 1 }} onClick={() => handleEditClick(employee)}>
+                  <Button variant="contained" sx={{ marginRight: 1 }} onClick={() => handleEditClick(employee)}>
                       <EditIcon />
                   </Button>
-                  <Button variant="outlined" color="error"  onClick={() => handleDeleteClick(employee.email)}>
+                  <Button variant="contained" color="error"  onClick={() => handleDeleteClick(employee.email)}>
                       <DeleteIcon />
                   </Button>
                 </TableCell>
                 )}
               </TableRow>
             ))}
+              */}
           </TableBody>
           </Table>
         </TableContainer>
@@ -272,6 +361,20 @@ const ViewEmployeesPage: React.FC = () => {
             >
               &gt;
             </Button>
+
+            <FormControl size="small" variant="outlined" sx={{ width: '100px',  marginLeft: 'auto'}}>
+                  <InputLabel>Page Size</InputLabel>
+                  <Select
+                    value={pageSize}
+                    onChange={(e) => dispatch(setPageSize(Number(e.target.value)))}
+                    label="Page Size"
+                  >
+                    <MenuItem value="2">2</MenuItem>
+                    <MenuItem value="5">5</MenuItem>
+                    <MenuItem value="10">10</MenuItem>
+                    <MenuItem value="15">15</MenuItem>
+                  </Select>
+              </FormControl>
         </Box>
       </CardContent>
       </Card>

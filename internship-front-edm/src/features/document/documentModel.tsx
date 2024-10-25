@@ -16,5 +16,6 @@ export interface ReadFileMetadataPayload{
     uploadedAt: string;
     blobUri: string;
     uploadedBy: string;
-    blobReadUri: string;
+    blobViewUri: string;
+    blobDownloadUri: string;
 }

@@ -2,10 +2,14 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ActionStatus } from '../login/authSlice';
 import { RootState } from '../../app/store';
 
-interface Employee {
+export interface Employee {
   email: string;
   role: 'HR' | 'Employee';
   department: 'HR' | 'FrontDev' | 'BackDev' | 'Security';
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  workLocation: string;
 }
 
 interface EmployeeState {
@@ -16,6 +20,7 @@ interface EmployeeState {
   sortField: 'role' | 'department' | 'email' | undefined;
   sortOrder: 'asc' | 'desc' | undefined;
   searchQuery: string;
+  pageSize: number;
   pageNumber: number;
   totalPages: number;
   editStatus: ActionStatus;
@@ -32,6 +37,7 @@ const initialState: EmployeeState = {
   sortField: 'role',
   sortOrder: 'desc',
   searchQuery: '',
+  pageSize: 5,
   pageNumber: 1,
   totalPages: 0,
   editStatus: ActionStatus.Idle,
@@ -72,6 +78,9 @@ const employeeSlice = createSlice({
     },
     setSearchQuery: (state, action: PayloadAction<string>) => {
       state.searchQuery = action.payload;
+    },
+    setPageSize: (state, action: PayloadAction<number>) => {
+      state.pageSize = action.payload;
     },
     setPageNumber: (state, action: PayloadAction<number>) => {
       state.pageNumber = action.payload;
@@ -115,7 +124,7 @@ export const isEditingEmployeeOngoing = (state: RootState) => state.employee.edi
 
 export const { 
   getEmployeesFetch, getEmployeesSuccess, getEmployeesFailure, 
-  setFilterRole, setFilterDepartment, setSort, setSearchQuery, setPageNumber, setTotalPages,
+  setFilterRole, setFilterDepartment, setSort, setSearchQuery, setPageSize, setPageNumber, setTotalPages,
   createEmployeeRequested, createEmployeeSuccess, createEmployeeFailure, resetCreateEmployee,
   editEmployeeRequest, editEmployeeSuccess, editEmployeeFailure, deleteEmployeeRequest 
 } = employeeSlice.actions;

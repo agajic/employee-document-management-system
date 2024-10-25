@@ -1,7 +1,7 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { loginFailed, logoutSuccess, loginRequested, logoutRequested, loginSucceeded, checkAuthRequested, checkAuthFailed } from './authSlice';
+import { loginFailed, logoutSuccess, loginRequested, logoutRequested, loginSucceeded, checkAuthRequested, checkAuthFailed, setPasswordSucceeded, setPasswordFailed, setPasswordRequested } from './authSlice';
 import { PayloadAction } from '@reduxjs/toolkit';
-import { LoginPayload, User } from './authModel';
+import { LoginPayload, SetPasswordForm, User } from './authModel';
 
 async function loginApi(credentials: LoginPayload): Promise<User> {
     const response = await fetch('https://localhost:7262/login', {
@@ -88,11 +88,38 @@ function* logoutSaga(): Generator<any, void, Response> {
 
 
 
+async function setPasswordApi(data: SetPasswordForm) {
+  const response = await fetch('https://localhost:7262/set-password', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error('Set password failed..');
+  }
+};
+
+function* setPasswordSaga(action: PayloadAction<SetPasswordForm>): Generator<any, void> {
+  try {
+    yield call(setPasswordApi, action.payload);
+    yield put(setPasswordSucceeded());
+  } catch (error) {
+    yield put(setPasswordFailed());
+    console.error('Set password failed..', error);
+  }
+};
+
+
 
 function* authSaga() {
   yield takeLatest(loginRequested.type, loginSaga);  
   yield takeLatest(logoutRequested.type, logoutSaga);
-  yield takeLatest(checkAuthRequested.type, checkAuthSaga)
+  yield takeLatest(checkAuthRequested.type, checkAuthSaga);
+  yield takeLatest(setPasswordRequested.type, setPasswordSaga);
 }
 
 export default authSaga;

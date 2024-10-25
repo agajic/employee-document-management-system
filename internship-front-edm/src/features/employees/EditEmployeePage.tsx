@@ -28,6 +28,10 @@ interface Employee {
   newEmail: string;
   role: 'HR' | 'Employee';
   department: 'HR' | '';
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  workLocation: string;
 }
 
 interface EditEmployeeProps {
@@ -108,6 +112,22 @@ const EditEmployee: React.FC<EditEmployeeProps> = ({ employee, onSave, onBack })
         onChange={(e) => handleInputChange('newEmail', e.target.value)}
         sx={{ marginBottom: 2, width: '100%' }}
       />
+      <Box sx={{ display: 'flex', gap: 2, marginBottom:2 }}>
+      <TextField
+        placeholder="First Name"
+        variant="outlined"
+        value={editedEmployee.firstName}
+        onChange={(e) => handleInputChange('firstName', e.target.value)}
+        sx={{ flex: 1 }}
+      />
+      <TextField
+        placeholder="Last Name"
+        variant="outlined"
+        value={editedEmployee.lastName}
+        onChange={(e) => handleInputChange('lastName', e.target.value)}
+        sx={{ flex: 1 }}
+      />
+      </Box>
       <FormControl variant="outlined" sx={{ width: '100%', marginBottom: 2 }}>
         <InputLabel>Role</InputLabel>
         <Select
@@ -137,6 +157,28 @@ const EditEmployee: React.FC<EditEmployeeProps> = ({ employee, onSave, onBack })
         </Select>
       </FormControl>
       )}
+
+    <TextField
+        placeholder="Phone Number"
+        variant="outlined"
+        value={editedEmployee.phoneNumber}
+        onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
+        sx={{ marginBottom: 2, width: '100%' }}
+    />
+
+    <FormControl fullWidth sx={{ marginBottom: 2 }}>
+      <InputLabel>Work Location</InputLabel>
+      <Select
+        value={editedEmployee.workLocation}
+        onChange={(e) => handleInputChange('workLocation', e.target.value)}
+        label="Work Location"
+      >
+        <MenuItem value="Office-based">Office-based</MenuItem>
+        <MenuItem value="Remote">Remote</MenuItem>
+        <MenuItem value="Hybrid">Hybrid</MenuItem>
+      </Select>
+    </FormControl>
+
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
         <Button variant="outlined" onClick={onBack}>
           Back

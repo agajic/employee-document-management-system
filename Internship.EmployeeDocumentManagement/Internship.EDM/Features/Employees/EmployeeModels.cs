@@ -6,6 +6,10 @@
         public string Email { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
         public string Department { get; set; } = string.Empty;
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
+        public string WorkLocation { get; set; } = string.Empty;
     }
 
     public class CreateEmployeeModel
@@ -13,6 +17,10 @@
         public string Email { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
         public string Department { get; set; } = string.Empty;
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
+        public string WorkLocation { get; set; } = string.Empty;
     }
 
     public class DeleteEmployeeModel
@@ -26,6 +34,10 @@
         public string NewEmail { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
         public string Department { get; set; } = string.Empty;
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
+        public string WorkLocation { get; set; } = string.Empty;
     }
 
     public class FilterEmployeeModel
@@ -35,6 +47,7 @@
         public string SortBy { get; set; } = string.Empty;
         public string SortOrder { get; set; } = string.Empty;
         public string Search { get; set; } = string.Empty;
+        public int PageSize { get; set; } = 5;
         public int PageNumber { get; set; } = 1;
     }
 }

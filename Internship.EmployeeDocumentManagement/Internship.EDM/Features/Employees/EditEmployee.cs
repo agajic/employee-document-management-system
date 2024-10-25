@@ -16,6 +16,10 @@ namespace Internship.EDM.Features.Employees
                 employee.Email = model.NewEmail;
                 employee.Role = model.Role;
                 employee.Department = model.Department;
+                employee.FirstName = model.FirstName;
+                employee.LastName = model.LastName;
+                employee.PhoneNumber = model.PhoneNumber;
+                employee.WorkLocation = model.WorkLocation;
 
                 session.Store(employee);
                 await session.SaveChangesAsync();

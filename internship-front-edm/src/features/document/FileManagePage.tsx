@@ -216,8 +216,8 @@ const FileManagePage = () => {
                 <TableContainer component={Paper}>
                     <Table>
                     <TableHead>
-                        <TableRow>
-                            <TableCell>
+                        <TableRow sx={{ backgroundColor: '#f0f0f0' }}>
+                            <TableCell sx={{ fontWeight: 'bold' }}>
                               <TableSortLabel
                                 active={sortField === 'FileName'}
                                 direction={sortField === 'FileName' ? sortOrder : undefined}
@@ -226,7 +226,7 @@ const FileManagePage = () => {
                               File Name
                               </TableSortLabel>
                             </TableCell>
-                            <TableCell>
+                            <TableCell sx={{ fontWeight: 'bold' }}>
                               <TableSortLabel
                                 active={sortField === 'ContentType'}
                                 direction={sortField === 'ContentType' ? sortOrder : undefined}
@@ -235,7 +235,7 @@ const FileManagePage = () => {
                               File Type
                               </TableSortLabel>
                             </TableCell>
-                            <TableCell>
+                            <TableCell sx={{ fontWeight: 'bold' }}>
                               <TableSortLabel
                                 active={sortField === 'FileSize'}
                                 direction={sortField === 'FileSize' ? sortOrder : undefined}
@@ -244,7 +244,7 @@ const FileManagePage = () => {
                               File Size
                               </TableSortLabel>
                             </TableCell>
-                            <TableCell>
+                            <TableCell sx={{ fontWeight: 'bold' }}>
                               <TableSortLabel
                                 active={sortField === 'UploadedAt'}
                                 direction={sortField === 'UploadedAt' ? sortOrder : undefined}
@@ -253,12 +253,12 @@ const FileManagePage = () => {
                               Uploaded At
                               </TableSortLabel>
                             </TableCell>
-                            <TableCell></TableCell>
+                            <TableCell sx={{ fontWeight: 'bold' }}>Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {files.map((singleFile) => (
-                        <TableRow key={singleFile.blobReadUri}>
+                        <TableRow key={singleFile.blobViewUri}>
                             <TableCell>{singleFile.fileName}</TableCell>
                             <TableCell>{singleFile.contentType}</TableCell>
                             <TableCell>{singleFile.fileSize}</TableCell>
@@ -267,14 +267,14 @@ const FileManagePage = () => {
                                 <Button
                                     variant="contained"
                                     color="primary"
-                                    style={{ marginLeft: '10px' }}
-                                    onClick={() => window.open(singleFile.blobReadUri, "_blank")}
-                                    ><DownloadIcon sx={{marginRight: 1.4}}></DownloadIcon>  Download
+                                    style={{ marginLeft: '5px' }}
+                                    onClick={() => window.open(singleFile.blobDownloadUri, "_blank")}
+                                    ><DownloadIcon></DownloadIcon>
                                 </Button>
-                                <Button variant="contained" color="primary" style={{ marginLeft: '20px' }} onClick={() => handleOpenViewFileModel(singleFile.fileName, singleFile.blobReadUri)}>
+                                <Button variant="contained" color="primary" style={{ marginLeft: '5px' }} onClick={() => handleOpenViewFileModel(singleFile.fileName, singleFile.blobViewUri)}>
                                     <VisibilityIcon />
                                 </Button>
-                                <Button variant="contained" color="error" style={{ marginLeft: '20px' }} onClick={() => handleDeleteClick(singleFile.blobName)}>
+                                <Button variant="contained" color="error" style={{ marginLeft: '5px' }} onClick={() => handleDeleteClick(singleFile.blobName)}>
                                     <DeleteIcon />
                                 </Button>
                             </TableCell>

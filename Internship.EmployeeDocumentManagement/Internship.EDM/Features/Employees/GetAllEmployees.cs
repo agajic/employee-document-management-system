@@ -21,15 +21,19 @@ namespace Internship.EDM.Features.Employees
                 string sortBy = filters.SortBy;
                 string sortOrder = filters.SortOrder;
                 string search = filters.Search;
+                int pageSize = filters.PageSize;
                 int pageNumber = filters.PageNumber;
 
-                int PAGE_SIZE = 2;
-                var offset = (pageNumber - 1) * PAGE_SIZE;
+                var offset = (pageNumber - 1) * pageSize;
 
                 var sql = @"
                         SELECT data->>'Email' AS Email, 
                                 data->>'Role' AS Role, 
-                                data->>'Department' AS Department
+                                data->>'Department' AS Department,
+                                data->>'FirstName' AS FirstName,
+                                data->>'LastName' AS LastName,
+                                data->>'PhoneNumber' AS PhoneNumber,
+                                data->>'WorkLocation' AS WorkLocation
                         FROM mt_doc_employee
                         WHERE 1=1";
 
@@ -62,7 +66,7 @@ namespace Internship.EDM.Features.Employees
                     Role = role,
                     Department = department,
                     Search = $"%{search?.ToLower()}%",
-                    Limit = PAGE_SIZE,
+                    Limit = pageSize,
                     Offset = offset,
                 });
 
@@ -86,7 +90,7 @@ namespace Internship.EDM.Features.Employees
                     Search = $"%{search?.ToLower()}%"
                 });
 
-                double doubleTotalPages = (double)totalEmployees / PAGE_SIZE;
+                double doubleTotalPages = (double)totalEmployees / pageSize;
                 int intTotalPages = (int)Math.Ceiling(doubleTotalPages);
 
                 await connection.CloseAsync();

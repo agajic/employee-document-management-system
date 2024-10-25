@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { LoginPayload, User } from './authModel';
+import { LoginPayload, User, SetPasswordForm } from './authModel';
 
 export enum ActionStatus {
   Idle, Pending, Failed
@@ -11,6 +11,9 @@ interface AuthState {
   isAuthenticated: boolean;
   loginStatus: ActionStatus;
   logoutStatus: ActionStatus;
+  setPasswordForm: SetPasswordForm | null;
+  setPasswordStatus: ActionStatus;
+  setPasswordSuccess: boolean;
 }
 
 const initialState: AuthState = {
@@ -18,6 +21,9 @@ const initialState: AuthState = {
   isAuthenticated: false,
   loginStatus: ActionStatus.Idle,
   logoutStatus: ActionStatus.Idle,
+  setPasswordForm: null,
+  setPasswordStatus: ActionStatus.Idle,
+  setPasswordSuccess: false,
 };
 
 const authSlice = createSlice({
@@ -50,6 +56,16 @@ const authSlice = createSlice({
       state.loginStatus = ActionStatus.Idle;
       state.isAuthenticated = false;
     },
+    setPasswordRequested: (state, action: PayloadAction<SetPasswordForm>) => {
+      state.setPasswordStatus = ActionStatus.Pending;
+    },                    
+    setPasswordSucceeded: (state) => { 
+      state.setPasswordStatus = ActionStatus.Idle;
+      state.setPasswordSuccess = true;
+    },
+    setPasswordFailed: (state) => {
+      state.setPasswordStatus = ActionStatus.Failed;
+    },
   },
 });
 
@@ -60,5 +76,6 @@ export const selectLoginActionStatus = (state: RootState) => state.auth.loginSta
 export const { 
   loginRequested, loginSucceeded, loginFailed, 
   logoutRequested, logoutSuccess, 
-  checkAuthRequested, checkAuthFailed } = authSlice.actions;
+  checkAuthRequested, checkAuthFailed,
+  setPasswordRequested, setPasswordSucceeded, setPasswordFailed, } = authSlice.actions;
 export default authSlice.reducer;

@@ -7,3 +7,9 @@ export interface User {
     email: string;
     role: string;
 }
+
+export interface SetPasswordForm {
+    email: string;
+    token: string;
+    password: string;
+  }
