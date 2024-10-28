@@ -1,13 +1,24 @@
-import { Provider} from 'react-redux';
-import { store } from './app/store';
+import { Provider, useDispatch, useSelector} from 'react-redux';
+import { AppDispatch, RootState, store } from './app/store';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './features/login/LoginPage';
 import DashboardPage from './features/dashboard/DashboardPage';
 import PrivateRoute from './features/login/PrivateRoute';
 import SetPasswordPage from './features/login/SetPasswordPage';
+import { useEffect } from 'react';
+import { checkAuthRequested } from './features/login/authSlice';
+import { activityRequested } from './features/activity/activitySlice';
 
 function App() {
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(checkAuthRequested());
+    dispatch(activityRequested());
+  }, [dispatch]);
+
   return (
+
     <Provider store={store}>
       <Router>
         <Routes>

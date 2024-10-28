@@ -11,6 +11,7 @@ using System.Reflection;
 using Internship.EDM.Infrastructure.EmailSendLogic;
 using Wolverine;
 using Wolverine.ErrorHandling;
+using Internship.EDM.Features.UserSessions;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -62,11 +63,12 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/access-denied";
     options.Cookie.Name = "Cookie";
     options.Cookie.HttpOnly = true;
-    options.Cookie.SameSite = SameSiteMode.Lax;  //None
-    options.Cookie.SecurePolicy = CookieSecurePolicy.None;   //SameAsRequest
+    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;   
     options.Cookie.Path = "/";
     options.Cookie.Domain = "localhost";
     options.ExpireTimeSpan = TimeSpan.FromDays(7);
+    options.SlidingExpiration = true;
 
     options.Events.OnRedirectToLogin = context =>
     {
@@ -83,6 +85,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     };
 });
 
+builder.Services.AddScoped<IUserClaimsPrincipalFactory<User>, CustomUserClaimsPrincipalFactory>();
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
@@ -92,6 +96,8 @@ builder.Services.AddCarter();
 
 builder.Services.AddScoped<DataSeeder>();
 builder.Services.AddHostedService<SeedHostedService>();
+
+builder.Services.AddHostedService<SessionCleanupService>();
 
 var app = builder.Build();
 

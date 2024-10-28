@@ -15,9 +15,7 @@ namespace Internship.EDM.Features.Users
                 if (user == null)
                     return Results.BadRequest("Identity: User not found..");
 
-                var decodedToken = HttpUtility.UrlDecode(model.Token);
-
-                var result = await userManager.ResetPasswordAsync(user, decodedToken, model.Password);
+                var result = await userManager.ResetPasswordAsync(user, model.Token, model.Password);
                 if (result.Succeeded)
                     return Results.Ok("Password has been set successfully. You can now log in using your new password.");
 

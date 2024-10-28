@@ -6,7 +6,7 @@
         public string FileName { get; set; } = string.Empty;
         public string BlobName { get; set; } = string.Empty;
         public string ContentType { get; set; } = string.Empty;
-        public string FileSize { get; set; } = string.Empty;
+        public int FileSize { get; set; }
         public string UploadedAt { get; set; } = string.Empty;
         public string BlobUri { get; set; } = string.Empty;
         public string UploadedBy { get; set; } = string.Empty;

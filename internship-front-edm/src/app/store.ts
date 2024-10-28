@@ -3,11 +3,13 @@ import authReducer from '../features/login/authSlice';
 import employeeReducer from '../features/employees/employeesSlice';
 import departmentReducer from '../features/department/departmentSlice';
 import documentReducer from '../features/document/documentSlice';
+import activityReducer from '../features/activity/activitySlice';
 import createSagaMiddleware from 'redux-saga';
 import authSaga from '../features/login/authSaga';
 import employeesSaga from '../features/employees/employeesSaga';
 import departmentSaga from '../features/department/departmentSaga';
 import documentSaga from '../features/document/documentSaga';
+import activitySaga from '../features/activity/activitySaga';
 
 
 const sagaMiddleware = createSagaMiddleware();
@@ -18,6 +20,7 @@ export const store = configureStore({
     employee: employeeReducer,
     department: departmentReducer,
     doc: documentReducer,
+    activity: activityReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -31,6 +34,7 @@ sagaMiddleware.run(authSaga);
 sagaMiddleware.run(employeesSaga);
 sagaMiddleware.run(departmentSaga);
 sagaMiddleware.run(documentSaga);
+sagaMiddleware.run(activitySaga);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TextField, Button, Box, Typography, CircularProgress } from '@mui/material';
+import { TextField, Button, Box, Typography, CircularProgress, Card, CardContent } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
 import { ActionStatus, setPasswordRequested } from './authSlice';
@@ -44,44 +44,61 @@ const SetPasswordPage: React.FC = () => {
     };
 
     return (
-        <Box display="flex" flexDirection="column" alignItems="center" p={3}>
-            <Typography variant="h4" mb={2}>Set Your Password</Typography>
-            <TextField
-                label="Email"
-                variant="outlined"
-                value={email}
-                fullWidth
-                margin="normal"
-                disabled
-            />
-            <TextField
-                label="Password"
-                type="password"
-                variant="outlined"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                fullWidth
-                margin="normal"
-            />
-            <TextField
-                label="Confirm Password"
-                type="password"
-                variant="outlined"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                fullWidth
-                margin="normal"
-            />
-            {passwordMatchError && (
-                <Typography color="error" mt={2}>{passwordMatchError}</Typography>
-            )}
-            {setPasswordStatus===ActionStatus.Pending ? <CircularProgress /> : (
-                <Button variant="contained" color="primary" onClick={handleSubmit}>
-                    Set Password
-                </Button>
-            )}
-            {setPasswordStatus===ActionStatus.Failed && <Typography color="error" mt={2}>Couldn't set the password..</Typography>}
-        </Box>
+        //<Box display="flex" flexDirection="column" alignItems="center" p={3}>
+        <Card sx={{
+            width:"35%", 
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "absolute",
+            top: "35%",
+            left: "50%",
+            transform: "translate(-50%, -50%)"}}> 
+            <CardContent sx={{
+                padding:5,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                textAlign: "center"
+            }}>
+                <Typography variant="h4" mb={2}>Set Your Password</Typography>
+                <TextField
+                    label="Email"
+                    variant="outlined"
+                    value={email}
+                    fullWidth
+                    margin="normal"
+                    disabled
+                />
+                <TextField
+                    label="Password"
+                    type="password"
+                    variant="outlined"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    fullWidth
+                    margin="normal"
+                />
+                <TextField
+                    label="Confirm Password"
+                    type="password"
+                    variant="outlined"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    fullWidth
+                    margin="normal"
+                />
+                {passwordMatchError && (
+                    <Typography color="error" mt={2}>{passwordMatchError}</Typography>
+                )}
+                {setPasswordStatus===ActionStatus.Pending ? <CircularProgress /> : (
+                    <Button variant="contained" color="primary" onClick={handleSubmit} sx={{marginTop:2, marginBottom:2}}>
+                        Set Password
+                    </Button>
+                )}
+                {setPasswordStatus===ActionStatus.Failed && <Typography color="error" mt={2}>Couldn't set the password..</Typography>}
+            </CardContent>
+        </Card>
     );
 };
 

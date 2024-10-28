@@ -1,5 +1,7 @@
 ﻿using Carter;
+using Internship.EDM.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
 namespace Internship.EDM.Features.Auth
@@ -8,19 +10,16 @@ namespace Internship.EDM.Features.Auth
     {
         public void AddRoutes(IEndpointRouteBuilder routes)
         {
-            routes.MapGet("/check-auth", (ClaimsPrincipal user) =>
+            routes.MapGet("/check-auth", (SignInManager<User> signInManager, HttpContext httpContext) =>
             {
-                if (user.Identity?.IsAuthenticated == true)
-                {
-                    var email = user.FindFirst(ClaimTypes.Email)?.Value;
-                    var role = user.FindFirst(ClaimTypes.Role)?.Value;
+                var email = httpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+                var role = httpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
 
-                    return Results.Ok(new { Email = email, Role = role });
+                if (email == null || role == null) {
+                    return Results.BadRequest();
                 }
-                else
-                {
-                    return Results.Unauthorized();
-                }
+
+                return Results.Ok(new { Email = email, Role = role });
             }).RequireAuthorization();
 
 

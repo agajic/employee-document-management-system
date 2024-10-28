@@ -2,7 +2,7 @@ export interface FileMetadataPayload{
     fileName: string;
     blobName: string;
     contentType: string;
-    fileSize: string;
+    fileSize: number;
     uploadedAt: string;
     blobUri: string;
     uploadedBy: string;

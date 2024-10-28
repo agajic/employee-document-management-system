@@ -112,7 +112,7 @@ function* uploadFolderSaga(action: PayloadAction<{ uploadFiles: File[], userEmai
             fileName: file.name,
             blobName: sasToken.blobName,
             contentType: file.type,
-            fileSize: file.size.toString(),
+            fileSize: file.size,
             uploadedAt: new Date().toISOString(),
             blobUri: blockBlobClient.url,
             uploadedBy: action.payload.userEmail,

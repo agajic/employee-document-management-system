@@ -3,6 +3,7 @@ using Azure.Storage.Blobs;
 using Npgsql;
 using Dapper;
 using Carter;
+using System;
 
 namespace Internship.EDM.Features.Documents
 {
@@ -44,7 +45,14 @@ namespace Internship.EDM.Features.Documents
 
                 if (!string.IsNullOrEmpty(sortField) && !string.IsNullOrEmpty(sortOrder))
                 {
-                    sql += $" ORDER BY {sortField} {(sortOrder.ToLower() == "desc" ? "DESC" : "ASC")}";
+                    if (sortField == "FileSize")
+                    {
+                        sql += $" ORDER BY (data->>'FileSize')::INTEGER {(sortOrder.ToLower() == "desc" ? "DESC" : "ASC")}";
+                    }
+                    else
+                    {
+                        sql += $" ORDER BY {sortField} {(sortOrder.ToLower() == "desc" ? "DESC" : "ASC")}";
+                    }
                 }
 
                 sql += " LIMIT @Limit OFFSET @Offset;";

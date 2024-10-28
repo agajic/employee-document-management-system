@@ -3,6 +3,7 @@ import { loginFailed, logoutSuccess, loginRequested, logoutRequested, loginSucce
 import { PayloadAction } from '@reduxjs/toolkit';
 import { LoginPayload, SetPasswordForm, User } from './authModel';
 
+
 async function loginApi(credentials: LoginPayload): Promise<User> {
     const response = await fetch('https://localhost:7262/login', {
       method: 'POST',
@@ -41,11 +42,12 @@ async function checkAuthApi(): Promise<User> {
     credentials: 'include',
   });
 
-  if (!response.ok) {
+  /*if (!response.ok) {
     throw new Error('Not logged in..');
-  }
+  }*/
 
   const user = await response.json();
+  //console.log(user);
   return user;
 };
 
@@ -56,7 +58,7 @@ function* checkAuthSaga(): Generator<any, void, User> {
     yield put(loginSucceeded(user));
   } catch (error) {
     yield put(checkAuthFailed())
-    console.error('Auth failed..', error);
+    //console.error('Auth failed..', error);
   }
 }
 
@@ -64,7 +66,7 @@ function* checkAuthSaga(): Generator<any, void, User> {
 
 
 
-function* logoutSaga(): Generator<any, void, Response> {
+function* logoutSaga(): Generator<any, void> {
   try {
     const response: Response = yield call(()=> 
       fetch('https://localhost:7262/logout',{
